@@ -1,0 +1,53 @@
+{
+  "name": "easydiffusion",
+  "productName": "EasyDiffusion",
+  "version": "0.1.0",
+  "description": "Dead-simple local image generation. Download, run, generate. Wraps ComfyUI so you never see it.",
+  "main": "src/main/main.js",
+  "author": "Steven Vu",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win nsis --x64",
+    "build:dir": "electron-builder --dir"
+  },
+  "devDependencies": {
+    "electron": "^33.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "dependencies": {
+    "7zip-bin": "^5.2.0",
+    "node-7z": "^3.0.0",
+    "ws": "^8.18.0"
+  },
+  "build": {
+    "appId": "com.stevenvu.easydiffusion",
+    "productName": "EasyDiffusion",
+    "directories": {
+      "output": "dist",
+      "buildResources": "build"
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "asarUnpack": [
+      "node_modules/7zip-bin/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "artifactName": "EasyDiffusion-Setup-${version}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "deleteAppDataOnUninstall": false
+    }
+  }
+}

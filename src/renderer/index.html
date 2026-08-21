@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline';" />
+    <title>EasyDiffusion</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ── Boot splash ─────────────────────────────────────────── -->
+    <section id="view-boot" class="view active">
+      <div class="center">
+        <div class="logo">◈</div>
+        <div class="spinner"></div>
+        <p class="muted">Starting up…</p>
+      </div>
+    </section>
+
+    <!-- ── Hardware gate (unsupported) ─────────────────────────── -->
+    <section id="view-gate" class="view">
+      <div class="card center">
+        <div class="logo warn">⚠</div>
+        <h1 id="gate-title">This computer can't run EasyDiffusion</h1>
+        <p id="gate-message" class="muted"></p>
+        <div id="gate-gpus" class="gpu-list"></div>
+        <a class="link" id="gate-help" href="#">What are my options?</a>
+      </div>
+    </section>
+
+    <!-- ── First-run install ──────────────────────────────────── -->
+    <section id="view-install" class="view">
+      <div class="card center">
+        <div class="logo">◈</div>
+        <h1>Setting things up</h1>
+        <p class="muted">One-time setup. This downloads the engine and a model (about 9 GB total). You can leave it running.</p>
+        <div class="progress-wrap">
+          <div class="progress-label" id="install-label">Preparing…</div>
+          <div class="progress-bar"><div class="progress-fill" id="install-fill"></div></div>
+          <div class="progress-pct" id="install-pct">0%</div>
+        </div>
+        <div id="install-detail" class="gpu-badge"></div>
+      </div>
+    </section>
+
+    <!-- ── Engine boot ─────────────────────────────────────────── -->
+    <section id="view-engine" class="view">
+      <div class="center">
+        <div class="spinner"></div>
+        <p class="muted" id="engine-status">Warming up the engine…</p>
+      </div>
+    </section>
+
+    <!-- ── Main app ────────────────────────────────────────────── -->
+    <section id="view-app" class="view">
+      <header class="topbar">
+        <span class="brand">◈ EasyDiffusion</span>
+        <div class="tabs">
+          <button class="tab active" data-mode="txt2img">Create</button>
+          <button class="tab" data-mode="img2img">Edit an image</button>
+        </div>
+        <label class="model-select">
+          <span>Model</span>
+          <select id="model-picker"></select>
+        </label>
+        <button class="ghost" id="open-outputs">Open folder</button>
+      </header>
+
+      <main class="workspace">
+        <div class="controls">
+          <label class="field">
+            <span>Describe what you want</span>
+            <textarea id="prompt" rows="4" placeholder="a photo of…"></textarea>
+          </label>
+
+          <div id="img2img-only" class="hidden">
+            <label class="field">
+              <span>Your image</span>
+              <div class="dropzone" id="dropzone">
+                <img id="input-preview" class="hidden" />
+                <span id="dropzone-hint">Click or drop an image here</span>
+                <input type="file" id="file-input" accept="image/*" hidden />
+              </div>
+            </label>
+            <label class="field">
+              <span>How much to change it <b id="denoise-val">45%</b></span>
+              <input type="range" id="denoise" min="10" max="100" value="45" />
+              <small class="muted">Lower = stays close to your image. Higher = reinvents it.</small>
+            </label>
+          </div>
+
+          <label class="field checkbox-field hidden" id="face-field">
+            <input type="checkbox" id="enhance-faces" checked />
+            <span>Enhance faces <small class="muted">(re-renders faces for better detail)</small></span>
+          </label>
+
+          <details class="advanced">
+            <summary>Advanced</summary>
+            <label class="field">
+              <span>Avoid (negative prompt)</span>
+              <input type="text" id="negative" value="lowres, bad anatomy, worst quality" />
+            </label>
+            <div class="row">
+              <label class="field">
+                <span>Steps</span>
+                <input type="number" id="steps" value="30" min="5" max="60" />
+              </label>
+              <label class="field">
+                <span>Seed (blank = random)</span>
+                <input type="number" id="seed" placeholder="random" />
+              </label>
+            </div>
+          </details>
+
+          <button id="generate" class="primary">Generate</button>
+          <div class="progress-wrap hidden" id="gen-progress-wrap">
+            <div class="progress-bar"><div class="progress-fill" id="gen-fill"></div></div>
+          </div>
+          <p class="error hidden" id="gen-error"></p>
+        </div>
+
+        <div class="canvas">
+          <div id="result-empty" class="muted center">Your image will appear here.</div>
+          <img id="result-img" class="hidden" />
+        </div>
+      </main>
+    </section>
+
+    <script src="renderer.js"></script>
+  </body>
+</html>
